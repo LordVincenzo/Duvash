@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DUVASH</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        nav {
+            background-color: #6F503F; 
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1030;
+            transition: background-color 0.3s ease;
+            animation: slideDown 0.5s ease-out;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+
+        .nav-link {
+            color: white !important;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-brand {
+            color: white !important;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-brand img {
+            height: 40px; 
+            width: 40px; 
+            border-radius: 50%;
+            border: 2px solid #6F503F;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-brand img:hover {
+            transform: rotate(360deg);
+        }
+
+        .product-img {
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+}
+
+.product-img:hover {
+    transform: scale(1.1) rotate(2deg);
+}
+
+.add-to-cart, #cartButton, .btn {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+
+.add-to-cart:hover::before, #cartButton:hover::before {
+    left: 50%;
+}
+
+.add-to-cart:active, #cartButton:active {
+    transform: scale(0.95);
+}
+
+        .card {
+            margin-bottom: 60px;
+            border: 2px solid #6F503F;
+            border-radius: 1%;
+            min-height: 420px;
+            animation: fadeIn 0.6s ease-out;
+            transition: all 0.3s ease;
+            will-change: transform, box-shadow;
+            background-color: rgba(206, 205, 205, 0.863);
+        }
+        
+
+        .card:hover {
+            transform: translateY(-15px) rotateX(5deg);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        body {
+            padding-top: 70px;
+            background-color: #e2dddd85;
+            transition: background-color 0.3s ease;
+            overflow-x: hidden;
+
+            }
+
+            .cart-counter {
+    animation: pulse 1s infinite;
+    display: inline-block;
+    transform-origin: center;
+}
+         
+        .color-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px 0;
+    gap: 10px; /* Espacio entre los botones de color */
+}
+
+.color-button {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border: 2px solid ;
+    outline: none;
+    position: relative;
+}
+
+.color-button:hover {
+    transform: scale(1.2) rotate(5deg);
+}
+
+.color-button.selected {
+    border-color: #6F503F; /* Color de borde cuando está seleccionado */
+    box-shadow: 0 0 0 2px white, 0 0 0 4px #6F503F; /* Efecto de anillo */
+}
+
+
+/* Efecto adicional: tooltip con el nombre del color */
+.color-button::after {
+    content: attr(data-color);
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0,0,0,0.7);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+
+
+        .rounded-circle {
+            border-radius: 100% !important;
+        }
+
+        #scrollToTopButton {
+    animation: float 2s ease-in-out infinite;
+}
+
+        #cartButton:hover, #scrollToTopButton:hover {
+            transform: scale(1.1);
+            background-color: #5a3e2f;
+        }
+
+        .modal-content {
+        background-color: #e0e0e0f5; /* Cambia el color de fondo del modal */
+        border: 2px solid #6F503F; /* Cambia el color del borde del modal */
+        border-radius: 10px; /* Cambia el radio del borde del modal */
+    }
+
+    .modal-header {
+        background-color: #6F503F; /* Cambia el color de fondo del encabezado del modal */
+        color: white; /* Cambia el color del texto del encabezado del modal */
+        border-bottom: 2px solid #6F503F; /* Cambia el color del borde inferior del encabezado del modal */
+    }
+
+    
+
+    .modal-footer {
+        background-color: #6F503F; /* Cambia el color de fondo del pie del modal */
+        color: white; /* Cambia el color del texto del pie del modal */
+        border-top: 2px solid #6F503F; /* Cambia el color del borde superior del pie del modal */
+    }
+
+    .close {
+        color: white; /* Cambia el color del botón de cerrar */
+    }
+
+    .close:hover {
+        color: #ffffff; /* Cambia el color del botón de cerrar al pasar el mouse */
+    }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                DUVASH
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Categorías
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="#Blusas">Blusas</a>
+                            <a class="dropdown-item" href="#Trajebaño">Trajes de Baño</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contacto.html">Contacto</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid d-flex justify-content-center">
+        <img src="img/logo/Muro.png" class="img-fluid" alt="Prenda 1">
+    </div>
+
+    <!-- Productos -->
+    <div class="row justify-content-center">
+        <h2 class="mt-5" id="Blusas">BLUSAS</h2>
+    </div>
+    <div class="container-fluid mt-5">
+        <div class="row justify-content-center">
+            <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                <div class="card">
+                    <img src="img/modelo/modelo1.png" class="card-img-top product-img" alt="Producto 1" data-toggle="modal" data-target="#productModal">                        
+                    <div class="card-body">
+                        <h5 class="card-title">Top Blusa</h5>
+                        <h6 class="card-title">Negro | Blanco | Rojo</h6>
+                        <p class="card-text">$35.000</p>
+                        <div class="color-selector">
+                            <button class="btn btn-dark color-button" data-color="Negro" style="background-color: black;"></button>
+                            <button class="btn btn-orange color-button" data-color="Blanco" style="background-color: white;"></button>
+                            <button class="btn btn-white color-button" data-color="Rojo" style="background-color: red; border: 1px solid #ccc;"></button>
+                        </div>
+                        <button class="btn add-to-cart" style="background-color: #6F503F; color: white">Agregar al Carrito</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                <div class="card">
+                    <img src="img/modelo/modelo2.png" class="card-img-top product-img" alt="Producto 1" data-toggle="modal" data-target="#productModal">                        
+                    <div class="card-body">
+                        <h5 class="card-title">Top Asimétrico</h5>
+                        <h6 class="card-title">Rojo | Negro | Beige | Blanco</h6>
+                        <p class="card-text">$35.000</p>
+                        <div class="color-selector">
+                            <button class="btn btn-dark color-button" data-color="Rojo" style="background-color: red;"></button>
+                            <button class="btn btn-orange color-button" data-color="Negro" style="background-color: black;"></button>
+                            <button class="btn btn-white color-button" data-color="Beige" style="background-color: beige;"></button>
+                            <button class="btn btn-white color-button" data-color="Blanco" style="background-color: white;"></button>
+                        </div>
+                        <button class="btn add-to-cart" style="background-color: #6F503F; color: white">Agregar al Carrito</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                <div class="card">
+                    <img src="img/modelo/modelo2.png" class="card-img-top product-img" alt="Producto 1" data-toggle="modal" data-target="#productModal">                        
+                    <div class="card-body">
+                        <h5 class="card-title">Falda Shorts</h5>
+                        <h6 class="card-title">Malva | Blanco</h6>
+                        <p class="card-text">$45.000</p>
+                        <div class="color-selector">
+                            <button class="btn btn-dark color-button" data-color="Malva" style="background-color: #E0B0FF;"></button>
+                            <button class="btn btn-orange color-button" data-color="Blanco" style="background-color: white;"></button>
+                        </div>
+                        <button class="btn add-to-cart" style="background-color: #6F503F; color: white">Agregar al Carrito</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                <div class="card">
+                    <img src="img/modelo/modelo3.png" class="card-img-top product-img" alt="Producto 1" data-toggle="modal" data-target="#productModal">                        
+                    <div class="card-body">
+                        <h5 class="card-title">Crop top</h5>
+                        <h6 class="card-title">Lila | Negro | Blanco</h6>
+                        <p class="card-text">$35.000</p>
+                        <div class="color-selector">
+                            <button class="btn btn-dark color-button" data-color="Lila" style="background-color: #b695c0;"></button>
+                            <button class="btn btn-dark color-button" data-color="Negro" style="background-color: black;"></button>
+                            <button class="btn btn-orange color-button" data-color="Blanco" style="background-color: white;"></button>
+                            
+                        </div>
+                        <button class="btn add-to-cart" style="background-color: #6F503F; color: white">Agregar al Carrito</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                <div class="card">
+                    <img src="img/modelo/modelo4.png" class="card-img-top product-img" alt="Producto 1" data-toggle="modal" data-target="#productModal">                        
+                    <div class="card-body">
+                        <h5 class="card-title">Top Halter</h5>
+                        <h6 class="card-title">Negro</h6>
+                        <p class="card-text">$35.000</p>
+                        <div class="color-selector">
+                            <button class="btn btn-dark color-button" data-color="Negro" style="background-color: black;"></button>
+                        </div>
+                        <button class="btn add-to-cart" style="background-color: #6F503F; color: white">Agregar al Carrito</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                <div class="card">
+                    <img src="img/modelo/modelo5.png" class="card-img-top product-img" alt="Producto 1" data-toggle="modal" data-target="#productModal">                        
+                    <div class="card-body">
+                        <h5 class="card-title">Falda Globo</h5>
+                        <h6 class="card-title">Negro | Blanco</h6>
+                        <p class="card-text">$45.000</p>
+                        <div class="color-selector">
+                            <button class="btn btn-dark color-button" data-color="Negro" style="background-color: black;"></button>
+                            <button class="btn btn-orange color-button" data-color="Blanco" style="background-color: white;"></button>
+                            
+                        </div>
+                        <button class="btn add-to-cart" style="background-color: #6F503F; color: white">Agregar al Carrito</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                <div class="card">
+                    <img src="img/modelo/modelo6.png" class="card-img-top product-img" alt="Producto 1" data-toggle="modal" data-target="#productModal">                        
+                    <div class="card-body">
+                        <h5 class="card-title">Blusa Manga Larga</h5>
+                        <h6 class="card-title">Negro</h6>
+                        <p class="card-text">$40.000</p>
+                        <div class="color-selector">
+                            <button class="btn btn-dark color-button" data-color="Negro" style="background-color: black;"></button>
+                        </div>
+                        <button class="btn add-to-cart" style="background-color: #6F503F; color: white">Agregar al Carrito</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                <div class="card">
+                    <img src="img/modelo/modelo7.png" class="card-img-top product-img" alt="Producto 1" data-toggle="modal" data-target="#productModal">                        
+                    <div class="card-body">
+                        <h5 class="card-title">Vestido Corto</h5>
+                        <h6 class="card-title">Azul Rey</h6>
+                        <p class="card-text">$65.000</p>
+                        <div class="color-selector">
+                            <button class="btn btn-dark color-button" data-color="Azul Rey" style="background-color: #4169e1;"></button>
+                        </div>
+                        <button class="btn add-to-cart" style="background-color: #6F503F; color: white">Agregar al Carrito</button>
+                    </div>
+                </div>
+            </div> 
+        </div> 
+        <div class="row justify-content-center">
+            <h2 class="mt-3" id="Trajebaño">Trajes de Baño</h2>
+        </div>
+            <div class="mt-5 row justify-content-center">
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="card">
+                        <img src="img/modelo/modelo8.png" class="card-img-top product-img" alt="Producto 1" data-toggle="modal" data-target="#productModal">                        
+                        <div class="card-body">
+                            <h5 class="card-title">Traje De Baño Cachetero</h5>
+                            <h6 class="card-title">Naranja | Negro | Blanco</h6>
+                            <p class="card-text">$40.000</p>
+                            <div class="color-selector">
+                                <button class="btn btn-dark color-button" data-color="Naranja" style="background-color: rgba(237, 35, 13, 0.753);"></button>
+                                <button class="btn btn-dark color-button" data-color="Negro" style="background-color: black;"></button>
+                                <button class="btn btn-dark color-button" data-color="Blanco" style="background-color: white;"></button>
+                            </div>
+                            <button class="btn add-to-cart" style="background-color: #6F503F; color: white">Agregar al Carrito</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="card">
+                        <img src="img/modelo/modelo9.png" class="card-img-top product-img" alt="Producto 1" data-toggle="modal" data-target="#productModal">                        
+                        <div class="card-body">
+                            <h5 class="card-title">Traje De Baño Triangulo</h5>
+                            <h6 class="card-title">Camuflaje</h6>
+                            <p class="card-text">$38.000</p>
+                            <div class="color-selector">
+                                <button class="btn btn-dark color-button" data-color="Camuflaje" style="background-color: rgb(170, 119, 170);"></button>
+                            </div>
+                            <button class="btn add-to-cart" style="background-color: #6F503F; color: white">Agregar al Carrito</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="card">
+                        <img src="img/modelo/modelo10.png" class="card-img-top product-img" alt="Producto 1" data-toggle="modal" data-target="#productModal">                        
+                        <div class="card-body">
+                            <h5 class="card-title">Traje De Baño Hispter</h5>
+                            <h6 class="card-title">Azul Turquesa</h6>
+                            <p class="card-text">$40.000</p>
+                            <div class="color-selector">
+                                <button class="btn btn-dark color-button" data-color="Azul Turquesa" style="background-color: #5dc1b9;"></button>
+                            </div>
+                            <button class="btn add-to-cart" style="background-color: #6F503F; color: white">Agregar al Carrito</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    <button id="cartButton" type="button" class="btn rounded-circle" style="position: fixed; bottom: 20px; right: 20px; background-color: #6F503F; outline: none;">
+        <i class="fas fa-shopping-cart" style="color: white;"></i>
+        <span class="cart-counter" style="position: absolute; top: -10px; right: -10px; background-color: red; color: white; border-radius: 50%; padding: 5px 10px; font-size: 12px;">0</span>
+    </button>
+    <button id="scrollToTopButton" type="button" class="btn rounded-circle" style="position: fixed; bottom: 80px; right: 20px; background-color: #6F503F; outline: none; display: none;">
+        <i class="fas fa-arrow-up" style="color: white;"></i>
+    </button>
+
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalProductImg" src="" class="img-fluid" alt="Producto">
+                    <h5 id="modalProductTitle" class="mt-3"></h5>
+                    <p id="modalProductPrice"></p>
+                    <div class="color-selector">
+                        <button class="btn btn-dark color-button" data-color="Negro" style="background-color: black;"></button>
+                        <button class="btn btn-orange color-button" data-color="Blanco" style="background-color: white;"></button>
+                        <button class="btn btn-white color-button" data-color="Rojo" style="background-color: red; border: 1px solid #ccc;"></button>
+                    </div>
+                    <button type="button" class="btn" style="background-color: #6F503F; color: white;" id="modalAddToCart">Agregar al Carrito</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+        document.querySelectorAll('.product-img').forEach(img => {
+            img.addEventListener('click', function() {
+                const card = this.closest('.card');
+                const imgSrc = this.src;
+                const title = card.querySelector('.card-title').textContent;
+                const price = card.querySelector('.card-text').textContent;
+
+                document.getElementById('modalProductImg').src = imgSrc;
+                document.getElementById('modalProductTitle').textContent = title;
+                document.getElementById('modalProductPrice').textContent = price;
+            });
+        });
+
+         // Update cart counter function
+         function updateCartCounter() {
+        const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+        document.querySelector('.cart-counter').textContent = cartCount;
+    }
+
+        document.querySelectorAll('.color-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const buttons = this.closest('.color-selector').querySelectorAll('.color-button');
+                buttons.forEach(btn => btn.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+         // Add to cart from product cards
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function() {
+            const card = this.closest('.card');
+            const selectedColorButton = card.querySelector('.color-selector button.selected');
+            if (!selectedColorButton) {
+                alert('Por favor, selecciona un color antes de agregar al carrito.');
+                return;
+            }
+            const color = selectedColorButton.dataset.color;
+
+            const imgElement = card.querySelector('.product-img');
+            const imgSrc = imgElement ? (
+                imgElement.src || 
+                imgElement.getAttribute('src') || 
+                imgElement.currentSrc || 
+                ''
+            ) : '';
+            
+            const title = card.querySelector('.card-title').textContent;
+            const priceElement = card.querySelector('.card-text');
+            const price = priceElement ? priceElement.textContent.replace('$', '').trim() : '0';
+
+            const existingItem = cart.find(item => item.name === title && item.color === color);
+
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                const newItem = { 
+                    name: title, 
+                    price: parseFloat(price), 
+                    quantity: 1, 
+                    image: imgSrc,
+                    color: color
+                };
+                cart.push(newItem);
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCounter();
+        });
+    });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedCart = JSON.parse(localStorage.getItem('cart'));
+            if (savedCart) {
+                cart = savedCart;
+                cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+                document.querySelector('.cart-counter').textContent = cartCount;
+            }
+        });
+
+        document.getElementById('cartButton').addEventListener('click', function() {
+            window.location.href = 'carrito.html';
+        });
+
+        document.getElementById('modalAddToCart').addEventListener('click', function() {
+        const imgSrc = document.getElementById('modalProductImg').src;
+        const title = document.getElementById('modalProductTitle').textContent;
+        const price = document.getElementById('modalProductPrice').textContent.replace('$', '').trim();
+        const selectedColorButton = document.querySelector('.modal .color-selector button.selected');
+        if (!selectedColorButton) {
+            alert('Por favor, selecciona un color antes de agregar al carrito.');
+            return;
+        }
+        const color = selectedColorButton.dataset.color;
+
+
+        const existingItem = cart.find(item => item.name === title && item.color === color);
+
+        if (existingItem) {
+            existingItem.quantity++;
+        } else {
+            const newItem = { 
+                name: title, 
+                price: parseFloat(price), 
+                quantity: 1, 
+                image: imgSrc,
+                color: color
+            };
+            cart.push(newItem);
+        }
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCounter();
+    });
+    // Cart button redirection
+    const cartButtons = document.querySelectorAll('#cartButton');
+    cartButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            window.location.href = 'carrito.html';
+        });
+    });
+    </script>
+
+
+
+    <script>
+        const scrollToTopButton = document.getElementById('scrollToTopButton');
+
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollToTopButton.style.display = 'block';
+            } else {
+                scrollToTopButton.style.display = 'none';
+            }
+        });
+
+        scrollToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+
+</body>
+</html>

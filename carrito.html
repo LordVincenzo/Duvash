@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras - DUVASH</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #e2dddd85;
+        }
+        nav {
+            background-color: #6F503F; 
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1030;
+        }
+
+        .nav-link {
+            color: white !important;
+        }
+
+        .navbar-brand {
+            color: white !important;
+        }
+
+        .cart-container {
+            margin-top: 100px;
+        }
+
+        .cart-header {
+            background-color: #6F503F;
+            color: white;
+            padding: 10px;
+        }
+
+        .product-name {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .quantity-input {
+            width: 80px;
+        }
+
+        .total-price {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .custom-table thead {
+            background-color: #6F503F;
+            color: white;
+        }
+
+        .custom-table tbody tr {
+            background-color: #f8f9fa;
+        }
+
+        .custom-table tbody tr:nth-child(even) {
+            background-color: #e9ecef;
+        }
+
+        .checkout-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .cart-container {
+                margin-top: 70px;
+            }
+            .custom-table thead {
+                display: none;
+            }
+            .custom-table tbody tr {
+                display: block;
+                margin-bottom: 10px;
+            }
+            .custom-table tbody tr td {
+                display: block;
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+            }
+            .custom-table tbody tr td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 50%;
+                padding-left: 15px;
+                font-weight: bold;
+                text-align: left;
+            }
+            .quantity-input {
+                width: 100%;
+                margin-top: 5px;
+            }
+            .btn-delete {
+                width: 100%;
+                margin-top: 5px;
+            }
+            .total-price {
+                text-align: center;
+                margin-bottom: 10px;
+            }
+            .checkout-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .checkout-container button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <a class="navbar-brand" href="index.html">
+            DUVASH
+        </a>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">Inicio</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container cart-container">
+        <h2>Carrito de Compras</h2>
+        <table class="table custom-table">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Color</th>
+                    <th>Total</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="cart-items-container">
+                <!-- Cart items will be inserted here -->
+            </tbody>
+        </table>
+        <div class="checkout-container">
+            <h4 class="total-price">Total: $0.00</h4>
+            <button class="btn btn-success">Finalizar Compra</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCart();
+
+            document.querySelector('.cart-container').addEventListener('change', function(event) {
+                if (event.target.type === 'number') {
+                    const itemId = event.target.getAttribute('data-id');
+                    const newQuantity = parseInt(event.target.value, 10);
+                    let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+                    
+                    cartItems = cartItems.map(item => {
+                        if (item.id === itemId || (item.name === itemId.name && item.color === itemId.color)) {
+                            return {...item, quantity: newQuantity};
+                        }
+                        return item;
+                    });
+
+                    localStorage.setItem('cart', JSON.stringify(cartItems));
+                    renderCart();
+                }
+            });
+
+            document.querySelector('.cart-container').addEventListener('click', function(event) {
+                if (event.target.classList.contains('btn-delete')) {
+                    const itemName = event.target.getAttribute('data-name');
+                    const itemColor = event.target.getAttribute('data-color');
+                    
+                    let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+                    cartItems = cartItems.filter(item => 
+                        !(item.name === itemName && item.color === itemColor)
+                    );
+                    
+                    localStorage.setItem('cart', JSON.stringify(cartItems));
+                    renderCart();
+                }
+            });
+        });
+
+        function renderCart() {
+            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartItemsContainer = document.querySelector('.cart-items-container');
+            cartItemsContainer.innerHTML = '';
+
+            let total = 0;
+            cartItems.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+
+                const cartItem = document.createElement('tr');
+                cartItem.innerHTML = `
+                    <td data-label="Imagen"><img src="${item.image}" alt="${item.name}" class="img-fluid" style="max-width: 100px;"></td>
+                    <td data-label="Producto" class="product-name">${item.name}</td>
+                    <td data-label="Precio">$${item.price.toFixed(3)}</td>
+                    <td data-label="Cantidad">
+                        <input type="number" class="form-control quantity-input" value="${item.quantity}" min="1" data-id="${item.name}" data-color="${item.color}">
+                    </td>
+                    <td data-label="Color">${item.color}</td>
+                    <td data-label="Total">$${itemTotal.toFixed(3)}</td>
+                    <td data-label="Acciones">
+                        <button class="btn btn-delete" data-name="${item.name}" data-color="${item.color}">Eliminar</button>
+                    </td>
+                `;
+                cartItemsContainer.appendChild(cartItem);
+            });
+
+            document.querySelector('.total-price').textContent = `Total: $${total.toFixed(3)}`;
+        }
+    </script>
+</body>
+</html>
+<script>
+    document.querySelector('.btn-success').addEventListener('click', function() {
+        const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+        if (cartItems.length === 0) {
+            alert('El carrito está vacío.');
+            return;
+        }
+
+        let message = 'Hola, me gustaría comprar estas prendas:\n\n';
+        let total = 0;
+
+        cartItems.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+            message += `Producto: ${item.name}\nColor: ${item.color}\nCantidad: ${item.quantity}\nPrecio: $${item.price.toFixed(3)}\nTotal: $${itemTotal.toFixed(3)}\n\n`;
+        });
+
+        message += `Total de la compra: $${total.toFixed(3)}`;
+
+        const phoneNumber = '3246046273';
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+        window.open(whatsappUrl, '_blank');
+    });
+</script>
+

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .social-media {
+            text-align: center;
+            animation: fadeIn 2s ease-in-out;
+        }
+        .social-media h1 {
+            margin-bottom: 20px;
+            animation: slideIn 1s ease-in-out;
+        }
+        .social-media a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #000;
+            font-size: 2em;
+            transition: transform 0.3s, color 0.3s;
+        }
+        .social-media a:hover {
+            color: #0073e6;
+            transform: scale(1.2);
+        }
+        nav {
+            background-color: #6F503F; 
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1030;
+            animation: slideDown 1s ease-in-out;
+        }
+        .nav-link {
+            color: white !important;
+        }
+        .navbar-brand {
+            color: white !important;
+        }
+        .navbar-brand img {
+            height: 40px; 
+            width: 40px; 
+            border-radius: 50%;
+            border: 2px solid #6F503F;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); }
+            to { transform: translateY(0); }
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <a class="navbar-brand" href="index.html">
+            DUVASH
+        </a>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">Inicio</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="social-media">
+        <h1>Síguenos en nuestras redes sociales</h1>
+        <a href="https://www.instagram.com/duvash._/profilecard/?igsh=MWJnZXpxNjM5YXJnbw%3D%3D" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/people/Duvash/61566373141585/?mibextid=ZbWKwL" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.tiktok.com/@duvash._?_t=8qowk53Oz37&_r=1" target="_blank"><i class="fab fa-tiktok"></i></a>
+    </div>
+</body>
+</html>
